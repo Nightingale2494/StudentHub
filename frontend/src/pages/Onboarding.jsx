@@ -12,6 +12,7 @@ export default function Onboarding() {
   const [departments, setDepartments] = useState([]);
   const [collegeId, setCollegeId] = useState("");
   const [departmentCode, setDepartmentCode] = useState("");
+  const [departmentQuery, setDepartmentQuery] = useState("");
   const [year, setYear] = useState(2);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -24,6 +25,7 @@ export default function Onboarding() {
     if (!collegeId) {
       setDepartments([]);
       setDepartmentCode("");
+      setDepartmentQuery("");
       return;
     }
     api.get(`/departments`, { params: { collegeId } }).then(({ data }) => {
@@ -33,6 +35,12 @@ export default function Onboarding() {
       }
     });
   }, [collegeId, departmentCode]);
+
+  const filteredDepartments = departments.filter((d) => {
+    const q = departmentQuery.trim().toLowerCase();
+    if (!q) return true;
+    return d.code.toLowerCase().includes(q) || d.name.toLowerCase().includes(q);
+  });
 
   async function onSubmit(e) {
     e.preventDefault();
@@ -98,6 +106,14 @@ export default function Onboarding() {
               <label className="flex items-center gap-2 text-sm text-neutral-400 mb-1.5">
                 <GraduationCap className="w-4 h-4" /> Department
               </label>
+              <input
+                value={departmentQuery}
+                onChange={(e) => setDepartmentQuery(e.target.value)}
+                disabled={!collegeId}
+                placeholder={collegeId ? "Search department code or name" : "Select college first"}
+                data-testid="onboarding-department-search"
+                className="w-full mb-2 bg-[#121212] border border-[#262626] rounded-md px-3 py-2.5 text-sm text-white placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-[#0066FF]/40 focus:border-[#0066FF] disabled:opacity-50"
+              />
               <select
                 value={departmentCode}
                 onChange={(e) => setDepartmentCode(e.target.value)}
@@ -109,12 +125,15 @@ export default function Onboarding() {
                 <option value="">
                   {collegeId ? "Select your department" : "Select college first"}
                 </option>
-                {departments.map((d) => (
+                {filteredDepartments.map((d) => (
                   <option key={d.id} value={d.code}>
                     {d.code} — {d.name}
                   </option>
                 ))}
               </select>
+              {collegeId && filteredDepartments.length === 0 && (
+                <p className="mt-2 text-xs text-neutral-500">No departments matched your search.</p>
+              )}
             </div>
 
             <div>

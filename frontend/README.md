@@ -1,70 +1,78 @@
-# Getting Started with Create React App
+# StudentHub Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+StudentHub is a React-based student portal for study materials, mock tests, progress tracking, premium access, and admin management.
+
+## What students can do
+
+- Sign up/login and complete onboarding.
+- Select their college and department (for example: ECS, FT, IoT, and many others).
+- Access department-specific subjects, files, and mock tests.
+- Track progress and test attempts.
+- Upgrade to premium and access premium resources.
+
+## Department and branch coverage
+
+StudentHub is **not limited to a fixed small department list**. The onboarding department dropdown is populated dynamically from backend APIs:
+
+- Colleges are fetched from `GET /colleges`.
+- Departments are fetched from `GET /departments?collegeId=...`.
+
+That means all configured departments/branches in backend data (including large catalogs of 50+ entries) are supported without frontend code changes.
+
+## Tech Stack
+
+- React 19
+- React Router
+- CRACO + Tailwind CSS
+- Axios for API communication
+- Radix UI + shadcn/ui-style component primitives
+
+## Prerequisites
+
+- Node.js 20+
+- Yarn 1.22.x (as pinned in `package.json`)
+
+## Local Development
+
+From the `frontend` directory:
+
+```bash
+yarn install
+yarn start
+```
+
+The app runs on:
+
+- http://localhost:3000
 
 ## Available Scripts
 
-In the project directory, you can run:
+- `yarn start` — start development server.
+- `yarn test` — run test runner.
+- `yarn build` — create production build.
 
-### `npm start`
+## Environment Variables
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Create a `.env` file inside `frontend/` when needed.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Common variable:
 
-### `npm test`
+- `REACT_APP_API_URL` — backend base URL (example: `http://localhost:5000/api`).
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Troubleshooting
 
-### `npm run build`
+### Corepack/Yarn download errors in restricted networks
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+If your environment blocks `registry.yarnpkg.com`, `yarn` may fail to bootstrap via Corepack with a 403 tunneling/proxy error.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Options:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+1. Allowlist Yarn/NPM registry domains in your network.
+2. Pre-install Yarn 1.22.x in the execution environment.
+3. Use an internal registry mirror.
 
-### `npm run eject`
+## Notes
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- Routing and auth gates are implemented in `src/App.js`.
+- Department selection logic is implemented in `src/pages/Onboarding.jsx`.
+- Protected areas (dashboard, profile, tests, etc.) require authentication.
